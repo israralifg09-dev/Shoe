@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shoe Store</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <nav>
+        <h2>ShoeStore</h2>
+
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Shop</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+
+                <div class="cart" id="cart-button" role="button" tabindex="0" aria-label="Open cart">
+                        🛒 <span id="cart-count">0</span>
+                </div>
+    </nav>
+</header>
+
+<!-- Cart drawer -->
+<aside id="cart-drawer" class="cart-drawer" aria-hidden="true">
+    <div class="cart-drawer-inner">
+        <button class="cart-close" aria-label="Close cart">×</button>
+        <h3>Your Cart</h3>
+        <div id="cart-items" class="cart-items">
+            <!-- items injected here -->
+        </div>
+        <div class="cart-summary">
+            <div class="cart-total">Total: <span id="cart-total">$0.00</span></div>
+            <div class="cart-actions">
+                <button id="clear-cart" class="btn">Clear Cart</button>
+                <button id="checkout" class="btn">Checkout</button>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<section class="hero">
+    <div class="hero-text">
+        <h1>Step Into Style</h1>
+        <p>Premium Shoes for Every Journey.</p>
+        <button>Shop Now</button>
+    </div>
+</section>
+
+<section class="products">
+
+<h2>Featured Shoes</h2>
+
+<section class="offers">
+    <h2>Special Offers</h2>
+    <div class="offer-grid">
+        <div class="offer-card">
+            <h3>Summer Sale</h3>
+            <p>Up to 30% off selected sneakers.</p>
+        </div>
+        <div class="offer-card">
+            <h3>Buy 2 Get 10% Off</h3>
+            <p>Mix & match across categories.</p>
+        </div>
+        <div class="offer-card">
+            <h3>Free Shipping</h3>
+            <p>On orders over $100.</p>
+        </div>
+    </div>
+</section>
+
+<div class="product-grid">
+
+<div class="card" data-title="Running Shoes" data-price="$89" data-desc="Lightweight running shoes with breathable mesh and responsive cushioning." data-img="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1200">
+<img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600" alt="Running Shoes">
+<h3>Running Shoes</h3>
+<p class="price">$89</p>
+<p class="short-desc">Lightweight, breathable, great for daily runs.</p>
+<label>Size: <select class="size-select"><option>7</option><option>8</option><option>9</option><option>10</option></select></label>
+<div class="card-actions">
+    <button class="view-details">View Details</button>
+    <button class="add-to-cart" data-title="Running Shoes">Add to Cart</button>
+</div>
+</div>
+
+<div class="card" data-title="Casual Sneakers" data-price="$99" data-desc="Classic casual sneakers with cushioned insoles for everyday comfort." data-img="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=1200">
+<img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600" alt="Casual Sneakers">
+<h3>Casual Sneakers</h3>
+<p class="price">$99</p>
+<p class="short-desc">Comfortable and versatile for daily wear.</p>
+<label>Size: <select class="size-select"><option>7</option><option>8</option><option>9</option><option>10</option></select></label>
+<div class="card-actions">
+    <button class="view-details">View Details</button>
+    <button class="add-to-cart" data-title="Casual Sneakers">Add to Cart</button>
+</div>
+</div>
+
+<div class="card" data-title="Sport Shoes" data-price="$120" data-desc="Durable sport shoes with extra grip and lateral support." data-img="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=1200">
+<img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600" alt="Sport Shoes">
+<h3>Sport Shoes</h3>
+<p class="price">$120</p>
+<p class="short-desc">High-traction sole for intense workouts.</p>
+<label>Size: <select class="size-select"><option>7</option><option>8</option><option>9</option><option>10</option></select></label>
+<div class="card-actions">
+    <button class="view-details">View Details</button>
+    <button class="add-to-cart" data-title="Sport Shoes">Add to Cart</button>
+</div>
+</div>
+
+<div class="card" data-title="Luxury Shoes" data-price="$149" data-desc="Premium leather shoes with handcrafted details and cushioned lining." data-img="https://images.unsplash.com/photo-1514989940723-e8e51635b782?w=1200">
+<img src="https://images.unsplash.com/photo-1514989940723-e8e51635b782?w=600" alt="Luxury Shoes">
+<h3>Luxury Shoes</h3>
+<p class="price">$149</p>
+<p class="short-desc">Elegant design with premium materials.</p>
+<label>Size: <select class="size-select"><option>7</option><option>8</option><option>9</option><option>10</option></select></label>
+<div class="card-actions">
+    <button class="view-details">View Details</button>
+    <button class="add-to-cart" data-title="Luxury Shoes">Add to Cart</button>
+</div>
+</div>
+
+</div>
+
+</section>
+
+<!-- Product details modal -->
+<div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true">
+        <button class="modal-close" aria-label="Close">×</button>
+        <img id="modal-img" src="" alt="">
+        <div class="modal-info">
+            <h3 id="modal-title"></h3>
+            <p id="modal-price"></p>
+            <p id="modal-desc"></p>
+            <button id="modal-add" class="add-to-cart">Add to Cart</button>
+        </div>
+    </div>
+</div>
+
+<!-- About -->
+<section id="about" class="about">
+    <div class="about-inner">
+        <h2>About ShoeStore</h2>
+        <p>ShoeStore is dedicated to bringing you high-quality footwear designed for comfort and style. From performance runners to premium leather shoes, our curated selection is chosen to help you step confidently.</p>
+        <ul>
+            <li>Curated collections from trusted brands</li>
+            <li>Quality materials and workmanship</li>
+            <li>User-focused return and shipping policies</li>
+        </ul>
+    </div>
+</section>
+
+<!-- Contact -->
+<section id="contact" class="contact">
+    <div class="contact-inner">
+        <h2>Contact Us</h2>
+        <p>Have a question or need help? Send us a message and we'll get back to you within 1 business day.</p>
+        <form id="contact-form">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" required>
+
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required>
+
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+
+            <button type="submit" class="btn">Send Message</button>
+        </form>
+    </div>
+</section>
+
+<footer>
+<p>© 2026 ShoeStore. All Rights Reserved.</p>
+</footer>
+
+<div id="toast" class="toast" aria-live="polite"></div>
+<script src="script.js"></script>
+
+</body>
+</html>
