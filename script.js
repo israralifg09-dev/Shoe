@@ -58,6 +58,15 @@ function renderCart(){
 function openCart(){ const drawer = document.getElementById('cart-drawer'); if(!drawer) return; drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); }
 function closeCart(){ const drawer = document.getElementById('cart-drawer'); if(!drawer) return; drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); }
 
+function openCheckout(){ 
+	if(cart.length === 0){ showToast('Your cart is empty'); return; }
+	const modal = document.getElementById('checkout-modal'); if(!modal) return;
+	const total = cart.reduce((sum, item)=> sum + ((item.price||0) * (item.qty||0)), 0);
+	document.getElementById('checkout-total').textContent = `$${total.toFixed(2)}`;
+	modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
+}
+function closeCheckout(){ const modal = document.getElementById('checkout-modal'); if(!modal) return; modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); }
+
 document.addEventListener('DOMContentLoaded', ()=>{
 	// wire add-to-cart buttons
 	document.querySelectorAll('.add-to-cart').forEach(btn => btn.addEventListener('click', addCart));
@@ -79,7 +88,44 @@ document.addEventListener('DOMContentLoaded', ()=>{
 	const cartBtn = document.getElementById('cart-button'); if(cartBtn){ cartBtn.addEventListener('click', openCart); cartBtn.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') openCart(); }); }
 	const cartClose = document.querySelector('.cart-close'); if(cartClose) cartClose.addEventListener('click', closeCart);
 	document.getElementById('clear-cart')?.addEventListener('click', ()=>{ cart = []; saveCart(); });
-	document.getElementById('checkout')?.addEventListener('click', ()=>{ showToast('Checkout not implemented in demo'); });
+	document.getElementById('checkout')?.addEventListener('click', openCheckout);
+
+	// checkout modal handlers
+	const checkoutModal = document.getElementById('checkout-modal');
+	if(checkoutModal){
+		checkoutModal.addEventListener('click', (e)=>{ if(e.target === checkoutModal) closeCheckout(); });
+		const closeBtn = checkoutModal.querySelector('.modal-close'); if(closeBtn) closeBtn.addEventListener('click', closeCheckout);
+		document.getElementById('checkout-cancel')?.addEventListener('click', closeCheckout);
+		document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeCheckout(); });
+	}
+
+	// checkout form submission
+	const checkoutForm = document.getElementById('checkout-form');
+	if(checkoutForm){
+		checkoutForm.addEventListener('submit', (evt)=>{
+			evt.preventDefault();
+			const name = document.getElementById('checkout-name').value.trim();
+			const email = document.getElementById('checkout-email').value.trim();
+			const phone = document.getElementById('checkout-phone').value.trim();
+			const address = document.getElementById('checkout-address').value.trim();
+			const area = document.getElementById('checkout-area').value.trim();
+			const country = document.getElementById('checkout-country').value.trim();
+			if(!name || !email || !phone || !address || !area || !country){ showToast('Please fill all required fields'); return; }
+			const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+			if(!emailOk){ showToast('Enter a valid email'); return; }
+			const phoneOk = /^\d{7,}$/.test(phone.replace(/[\s\-\(\)]/g,''));
+			if(!phoneOk){ showToast('Enter a valid phone number'); return; }
+			const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+			const total = cart.reduce((sum, item)=> sum + ((item.price||0) * (item.qty||0)), 0);
+			orders.push({name, email, phone, address, area, country, postal: document.getElementById('checkout-postal').value.trim(), items: cart, total, date: new Date().toISOString()});
+			localStorage.setItem('orders', JSON.stringify(orders));
+			showToast('Order placed successfully! Thank you for your purchase.');
+			cart = [];
+			saveCart();
+			checkoutForm.reset();
+			closeCheckout();
+		});
+	}
 
 	// Contact form handling
 	const contactForm = document.getElementById('contact-form');

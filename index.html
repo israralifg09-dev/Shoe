@@ -141,6 +141,61 @@
     </div>
 </div>
 
+<!-- Checkout modal -->
+<div id="checkout-modal" class="modal" aria-hidden="true">
+    <div class="modal-content checkout-form-wrapper" role="dialog" aria-modal="true">
+        <button class="modal-close" aria-label="Close">×</button>
+        <h3>Checkout - Delivery Details</h3>
+        <form id="checkout-form">
+            <div class="form-group">
+                <label for="checkout-name">Full Name *</label>
+                <input id="checkout-name" name="name" type="text" required>
+            </div>
+            <div class="form-group">
+                <label for="checkout-email">Email *</label>
+                <input id="checkout-email" name="email" type="email" required>
+            </div>
+            <div class="form-group">
+                <label for="checkout-phone">Phone Number *</label>
+                <input id="checkout-phone" name="phone" type="tel" required>
+            </div>
+            <div class="form-group">
+                <label for="checkout-address">Street Address *</label>
+                <input id="checkout-address" name="address" type="text" required>
+            </div>
+            <div class="form-group">
+                <label for="checkout-area">Area/City *</label>
+                <input id="checkout-area" name="area" type="text" required>
+            </div>
+            <div class="form-group">
+                <label for="checkout-country">Country *</label>
+                <select id="checkout-country" name="country" required>
+                    <option value="">Select Country</option>
+                    <option value="Pakistan">Pakistan</option>
+                    <option value="India">India</option>
+                    <option value="USA">USA</option>
+                    <option value="UK">UK</option>
+                    <option value="Canada">Canada</option>
+                    <option value="Australia">Australia</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="checkout-postal">Postal Code</label>
+                <input id="checkout-postal" name="postal" type="text">
+            </div>
+            <div class="checkout-summary">
+                <h4>Order Summary</h4>
+                <p>Total: <span id="checkout-total">$0.00</span></p>
+            </div>
+            <div class="checkout-actions">
+                <button type="submit" class="btn btn-primary">Complete Order</button>
+                <button type="button" class="btn btn-secondary" id="checkout-cancel">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- About -->
 <section id="about" class="about">
     <div class="about-inner">
