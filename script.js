@@ -56,13 +56,15 @@ function addCart(e){
 	const title = (btn.dataset && btn.dataset.title) || (card && card.dataset.title) || document.getElementById('modal-title')?.textContent || 'Item';
 	const priceStr = (card && card.dataset.price) || document.getElementById('modal-price')?.textContent || '$0';
 	const price = Number(String(priceStr).replace(/[^0-9.]/g,'')) || 0;
+	const image = (card && card.dataset.img) || document.getElementById('modal-img')?.src || '';
+	const description = (card && card.dataset.desc) || document.getElementById('modal-desc')?.textContent || '';
 	const sizeEl = card ? card.querySelector('.size-select') : null;
 	const size = sizeEl ? sizeEl.value : '';
 
 	// try to find existing item by title+size
 	const existing = cart.find(i=>i.title===title && i.size===size);
 	if(existing){ existing.qty = (existing.qty||0) + 1; }
-	else { cart.push({id: Date.now(), title, price, size, qty: 1}); }
+	else { cart.push({id: Date.now(), title, price, size, qty: 1, image, description}); }
 	saveCart();
 	showToast(`${title} added`);
 }
@@ -76,8 +78,32 @@ function renderCart(){
 	cart.forEach(item=>{
 		total += (item.price||0) * (item.qty||0);
 		const row = document.createElement('div'); row.className = 'cart-item';
-		row.innerHTML = `<div class="ci-left"><div class="ci-title">${item.title}</div><div class="ci-size">${item.size ? 'Size: '+item.size : ''}</div></div><div class="ci-right"><div class="ci-qty"><button class="qty-decrease" data-id="${item.id}">−</button><span class="qty">${item.qty}</span><button class="qty-increase" data-id="${item.id}">+</button></div><div class="ci-price">$${((item.price||0)*item.qty).toFixed(2)}</div><button class="remove-item" data-id="${item.id}" aria-label="Remove">Remove</button></div>`;
+		const itemTotal = ((item.price||0) * (item.qty||0)).toFixed(2);
+		const itemImage = item.image ? `<img class="cart-item-image" src="${item.image}" alt="${item.title}">` : '';
+		const itemDesc = item.description ? `<div class="cart-item-desc">${item.description}</div>` : '';
+		row.innerHTML = `
+			<div class="cart-item-wrapper">
+				${itemImage}
+				<div class="ci-left">
+					<div class="ci-title">${item.title}</div>
+					${itemDesc}
+					<div class="ci-size">${item.size ? 'Size: '+item.size : 'No size'}</div>
+					<div class="ci-unit-price">$${(item.price||0).toFixed(2)} each</div>
+				</div>
+				<div class="ci-right">
+					<div class="ci-qty">
+						<button class="qty-decrease" data-id="${item.id}">−</button>
+						<span class="qty">${item.qty}</span>
+						<button class="qty-increase" data-id="${item.id}">+</button>
+					</div>
+					<div class="ci-price">$${itemTotal}</div>
+					<button class="remove-item" data-id="${item.id}" aria-label="Remove">✕ Remove</button>
+				</div>
+			</div>
+		`;
 		container.appendChild(row);
+	});
+	document.getElementById('cart-total').textContent = `$${total.toFixed(2)}`;
 	});
 	document.getElementById('cart-total').textContent = `$${total.toFixed(2)}`;
 
