@@ -1,4 +1,36 @@
+// Initialize EmailJS - replace with your actual EmailJS credentials
+emailjs.init("YOUR_PUBLIC_KEY");
+
+const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";
+const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
+const OWNER_EMAIL = "israralifg09@gmail.com";
+
 let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+async function sendOrderEmail(orderData){
+	try{
+		const itemsList = orderData.items.map(item => `${item.title} (Size: ${item.size}, Qty: ${item.qty}, $${item.price})`).join('\n');
+		const emailParams = {
+			to_email: OWNER_EMAIL,
+			customer_name: orderData.name,
+			customer_email: orderData.email,
+			customer_phone: orderData.phone,
+			customer_address: orderData.address,
+			customer_area: orderData.area,
+			customer_country: orderData.country,
+			customer_postal: orderData.postal,
+			items: itemsList,
+			total_amount: `$${orderData.total.toFixed(2)}`,
+			order_date: new Date().toLocaleString()
+		};
+		const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, emailParams);
+		console.log('Order email sent successfully', response);
+		return true;
+	}catch(error){
+		console.error('Failed to send order email', error);
+		return false;
+	}
+}
 
 function getCart(){ return cart; }
 function saveCart(){ localStorage.setItem('cart', JSON.stringify(cart)); updateCartUI(); }
@@ -102,7 +134,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 	// checkout form submission
 	const checkoutForm = document.getElementById('checkout-form');
 	if(checkoutForm){
-		checkoutForm.addEventListener('submit', (evt)=>{
+		checkoutForm.addEventListener('submit', async (evt)=>{
 			evt.preventDefault();
 			const name = document.getElementById('checkout-name').value.trim();
 			const email = document.getElementById('checkout-email').value.trim();
@@ -117,8 +149,13 @@ document.addEventListener('DOMContentLoaded', ()=>{
 			if(!phoneOk){ showToast('Enter a valid phone number'); return; }
 			const orders = JSON.parse(localStorage.getItem('orders') || '[]');
 			const total = cart.reduce((sum, item)=> sum + ((item.price||0) * (item.qty||0)), 0);
-			orders.push({name, email, phone, address, area, country, postal: document.getElementById('checkout-postal').value.trim(), items: cart, total, date: new Date().toISOString()});
+			const orderData = {name, email, phone, address, area, country, postal: document.getElementById('checkout-postal').value.trim(), items: cart, total, date: new Date().toISOString()};
+			orders.push(orderData);
 			localStorage.setItem('orders', JSON.stringify(orders));
+			
+			// Send email notification to admin
+			await sendOrderEmail(orderData);
+			
 			showToast('Order placed successfully! Thank you for your purchase.');
 			cart = [];
 			saveCart();
