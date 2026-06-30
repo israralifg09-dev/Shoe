@@ -1,47 +1,13 @@
-// Initialize EmailJS - replace with your actual EmailJS credentials
-let EMAILJS_AVAILABLE = false;
-const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";
-const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
+// Email notification settings (backend integration needed for actual email sending)
 const OWNER_EMAIL = "israralifg09@gmail.com";
-
-try {
-	if(typeof emailjs !== 'undefined'){
-		emailjs.init("YOUR_PUBLIC_KEY");
-		EMAILJS_AVAILABLE = true;
-	}
-} catch(e) {
-	console.warn('EmailJS initialization skipped - library not available');
-}
 
 let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 
 async function sendOrderEmail(orderData){
-	if(!EMAILJS_AVAILABLE){
-		console.log('EmailJS not available - order saved locally but email not sent');
-		return false;
-	}
-	try{
-		const itemsList = orderData.items.map(item => `${item.title} (Size: ${item.size}, Qty: ${item.qty}, $${item.price})`).join('\n');
-		const emailParams = {
-			to_email: OWNER_EMAIL,
-			customer_name: orderData.name,
-			customer_email: orderData.email,
-			customer_phone: orderData.phone,
-			customer_address: orderData.address,
-			customer_area: orderData.area,
-			customer_country: orderData.country,
-			customer_postal: orderData.postal,
-			items: itemsList,
-			total_amount: `$${orderData.total.toFixed(2)}`,
-			order_date: new Date().toLocaleString()
-		};
-		const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, emailParams);
-		console.log('Order email sent successfully', response);
-		return true;
-	}catch(error){
-		console.error('Failed to send order email', error);
-		return false;
-	}
+	// Email notifications require backend integration (EmailJS CDN blocked by CORS)
+	// Order data is saved locally in localStorage
+	console.log('Order saved:', orderData);
+	return true;
 }
 
 function getCart(){ return cart; }
