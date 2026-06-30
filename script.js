@@ -1,13 +1,25 @@
 // Initialize EmailJS - replace with your actual EmailJS credentials
-emailjs.init("YOUR_PUBLIC_KEY");
-
+let EMAILJS_AVAILABLE = false;
 const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";
 const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
 const OWNER_EMAIL = "israralifg09@gmail.com";
 
+try {
+	if(typeof emailjs !== 'undefined'){
+		emailjs.init("YOUR_PUBLIC_KEY");
+		EMAILJS_AVAILABLE = true;
+	}
+} catch(e) {
+	console.warn('EmailJS initialization skipped - library not available');
+}
+
 let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 
 async function sendOrderEmail(orderData){
+	if(!EMAILJS_AVAILABLE){
+		console.log('EmailJS not available - order saved locally but email not sent');
+		return false;
+	}
 	try{
 		const itemsList = orderData.items.map(item => `${item.title} (Size: ${item.size}, Qty: ${item.qty}, $${item.price})`).join('\n');
 		const emailParams = {
