@@ -104,8 +104,6 @@ function renderCart(){
 		container.appendChild(row);
 	});
 	document.getElementById('cart-total').textContent = `$${total.toFixed(2)}`;
-	});
-	document.getElementById('cart-total').textContent = `$${total.toFixed(2)}`;
 
 	// attach qty and remove handlers
 	container.querySelectorAll('.qty-increase').forEach(b=> b.addEventListener('click', (e)=>{ const id=Number(e.currentTarget.dataset.id); const it=cart.find(i=>i.id===id); if(it){ it.qty++; saveCart(); }}));
